@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:leyoplanner/AppFile/Register.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toast/toast.dart';
@@ -86,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                       showProgress = true;
                     });
                     try {
+                      // ignore: non_constant_identifier_names
                       final new_user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
                       print(new_user.toString());
@@ -93,6 +93,18 @@ class _LoginPageState extends State<LoginPage> {
                       if (new_user != null) {
                         Toast.show(
                           "Login Successfull",
+                          context,
+                          duration: Toast.LENGTH_SHORT,
+                          gravity: Toast.CENTER,
+                        );
+
+                        setState(() {
+                          showProgress = false;
+                        });
+                        Navigator.pushNamed(context, "/profile");
+                      } else {
+                        Toast.show(
+                          "yanlış bilgiler",
                           context,
                           duration: Toast.LENGTH_SHORT,
                           gravity: Toast.CENTER,
@@ -118,10 +130,7 @@ class _LoginPageState extends State<LoginPage> {
               Material(
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                    );
+                    Navigator.pushNamed(context, "/register");
                   },
                   minWidth: 200.0,
                   height: 45.0,

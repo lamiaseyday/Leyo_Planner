@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'Login.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -78,11 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           await _auth.createUserWithEmailAndPassword(
                               email: email, password: password);
                       if (new_user != null) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ));
+                        Navigator.pushNamed(context, "/login");
                         setState(() {
                           showProgress = false;
                         });
@@ -103,10 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
+                  Navigator.pushNamed(context, "/login");
                 },
                 child: Text(
                   "Already Registered? Login Now",

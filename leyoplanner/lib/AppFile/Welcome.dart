@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'Login.dart';
-import 'Register.dart';
 import 'color_hex.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -38,10 +36,7 @@ class _WelcomePage extends State<WelcomePage> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
+                      Navigator.pushNamed(context, "/login");
                     },
                     child: Text(
                       "Login",
@@ -65,10 +60,7 @@ class _WelcomePage extends State<WelcomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );
+                      Navigator.pushNamed(context, "/register");
                     },
                     child: Text(
                       "Register",
@@ -83,7 +75,7 @@ class _WelcomePage extends State<WelcomePage> {
                         ],
                         fontSize: 20.0,
                         color: FlutterColor(
-                            "#000000"), //color: Color(0xFFFFF8E1 şeklinde de oluyor.
+                            "#000000"), //color: Color(0xFFFFF8E1) şeklinde de oluyor.
                         fontWeight: FontWeight.w500,
                       ),
                     ),
