@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 
-class Dialoglar extends StatefulWidget {
+class ItemDialog extends StatefulWidget {
   @override
-  _DialoglarState createState() => _DialoglarState();
+  _ItemDialogState createState() => _ItemDialogState();
 }
 
-class _DialoglarState extends State<Dialoglar> {
+class _ItemDialogState extends State<ItemDialog> {
   final _formKey = GlobalKey<FormState>();
-
-  String _itemName; //text e yazılanı kaydetmek için.
-
+  String _itemName;
+  @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: Text("Görev Ekle."),
-      children: <Widget>[
+      title: Text("ekle"),
+      children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: <Widget>[
               Form(
-                key: _formKey, //bu key ile formu validate edebiliriz.
+                key: _formKey,
                 child: TextFormField(
                   maxLength: 250,
+                  autofocus: true,
                   onSaved: (value) => _itemName = value,
-                  autofocus: true, //text direk yazılabilir modda olur.
                   validator: (value) {
                     if (value.isEmpty) {
                       return "validation error";
@@ -35,10 +34,10 @@ class _DialoglarState extends State<Dialoglar> {
                 height: 16,
               ),
               FlatButton(
-                onPressed: _savedForm,
-                child: Text("Görevi Ekle"),
-                color: Theme.of(context).primaryColorLight,
-              ),
+                child: Text("Ekle"),
+                color: Colors.blue,
+                onPressed: _saveForm,
+              )
             ],
           ),
         ),
@@ -46,14 +45,10 @@ class _DialoglarState extends State<Dialoglar> {
     );
   }
 
-  void _savedForm() {
+  void _saveForm() {
     _formKey.currentState.save();
-    //forma yazılan değeri itemName e eşitlemiş olduk..
-
-    //sonra validate işlemi var
     if (_formKey.currentState.validate()) {
-      Navigator.pop(context, _itemName); //dialog kapanır.
-      //navigator pop context ve result parametresi alır.
+      Navigator.pop(context, _itemName);
     }
   }
 }

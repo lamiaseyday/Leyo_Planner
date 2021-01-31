@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:leyoplanner/AppFile/Ekipler.dart';
-import 'package:leyoplanner/AppFile/Gorevler.dart';
-import 'package:leyoplanner/AppFile/Projeler.dart';
+import 'package:leyoplanner/AppFile/EkiplerPage.dart';
+import 'package:leyoplanner/AppFile/GorevlerPage.dart';
+import 'package:leyoplanner/AppFile/ProjelerPage.dart';
+import 'package:leyoplanner/http/item_service.dart';
+import 'package:leyoplanner/model/item.dart';
+
+import 'dialog/item_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -16,46 +20,72 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePage extends State<ProfilePage> {
   int _selectedIndex = 0;
-  PageController _pageController = PageController();
-  List<Widget> _screens = [GorevlerPage(), ProjelerPage(), EkiplerPage()];
+  final PageController _pageController = PageController();
+  ItemService _itemService;
 
-  void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
+  @override
+  void initState() {
+    _itemService = ItemService();
+    _pageController.addListener(() {
+      int currenIndex = _pageController.page.round();
+      if (currenIndex != _selectedIndex) {
+        _selectedIndex = currenIndex;
+
+        setState(() {});
+      }
     });
-  }
-
-  void _onItemTapped(int selectedIndex) {
-    _pageController.jumpToPage(selectedIndex);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: _screens,
-        onPageChanged: _onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
+      appBar: AppBar(
+        title: Text('Leyo'),
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            String itemName = await showDialog(
+                context: context,
+                builder: (BuildContext context) => ItemDialog());
+
+            if (itemName.isNotEmpty) {
+              var item =
+                  Item(name: itemName, isCompleted: false, isArchived: false);
+
+              setState(() {});
+              _itemService.addItem(item.toJson());
+            }
+          },
+          child: Icon(Icons.add)),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.list,
-                color: _selectedIndex == 0 ? Colors.black : Colors.lightBlue),
-            label: ' ',
-          ),
+              icon: Icon(Icons.list), title: Text('Görevler')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_tree,
-                  color: _selectedIndex == 1 ? Colors.black : Colors.lightBlue),
-              label: ' '),
+              icon: Icon(Icons.people), title: Text('Ekipler')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.people,
-                  color: _selectedIndex == 2 ? Colors.black : Colors.lightBlue),
-              label: ' '),
+              icon: Icon(Icons.next_plan), title: Text('Projeler')),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onTap,
+      ),
+      body: PageView(
+        controller: _pageController,
+        children: <Widget>[
+          GorevlerPage(),
+          EkiplerPage(),
+          ProjelerPage(),
         ],
       ),
     );
+  }
+
+  void _onTap(int value) {
+    setState(() {
+      _selectedIndex = value;
+    });
+
+    _pageController.jumpToPage(value);
   }
 }
